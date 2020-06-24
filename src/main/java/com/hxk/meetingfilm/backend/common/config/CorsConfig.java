@@ -10,7 +10,7 @@ import org.springframework.web.filter.CorsFilter;
 /**
  * @author xiaokang.huang
  * @date 2020/6/19 14:51
- * @description
+ * @description 跨域配置
  */
 @Component
 @Configuration
