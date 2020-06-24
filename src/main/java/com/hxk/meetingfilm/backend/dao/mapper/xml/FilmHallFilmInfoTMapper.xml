@@ -3,7 +3,7 @@
 <mapper namespace="com.hxk.meetingfilm.hall.dao.mapper.FilmHallFilmInfoTMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hxk.meetingfilm.hall.dao.entity.FilmHallFilmInfoT">
+    <resultMap id="BaseResultMap" type="com.hxk.meetingfilm.backend.dao.entity.FilmHallFilmInfoT">
         <id column="UUID" property="uuid" />
         <result column="film_id" property="filmId" />
         <result column="film_name" property="filmName" />
