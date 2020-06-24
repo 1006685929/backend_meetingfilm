@@ -7,7 +7,7 @@ mybatis-plus:
     id-type: 0
     db-column-underline: false
     refresh-mapper: true
-#  configuration: #øÿ÷∆Ã®¥Ú”°sql
+#  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 spring:
