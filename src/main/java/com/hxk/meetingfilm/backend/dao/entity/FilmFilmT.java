@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @author hxk
  * @since 2020-06-08
  */
-public class FilmFilmT extends Model<FilmFilmT> {
+public class FilmFilmT extends Model<FilmFilmT> implements Serializable{
 
     private static final long serialVersionUID = 1L;
 

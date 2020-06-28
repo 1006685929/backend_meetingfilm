@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author hxk
  * @since 2020-06-05
  */
-public class FilmBackendUserT extends Model<FilmBackendUserT> {
+public class FilmBackendUserT extends Model<FilmBackendUserT> implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
