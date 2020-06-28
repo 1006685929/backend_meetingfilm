@@ -13,13 +13,16 @@ import com.hxk.meetingfilm.backend.dao.mapper.FilmFieldTMapper;
 import com.hxk.meetingfilm.backend.dao.mapper.FilmFilmTMapper;
 import com.hxk.meetingfilm.backend.dao.mapper.FilmHallFilmInfoTMapper;
 import com.hxk.meetingfilm.backend.service.HallService;
-import com.hxk.meetingfilm.backend.utils.common.vo.BaseResponseVO;
 import com.hxk.meetingfilm.backend.utils.exception.CommonServiceException;
 import com.hxk.meetingfilm.backend.utils.util.ToolUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiaokang.huang
@@ -27,6 +30,7 @@ import javax.annotation.Resource;
  * @description
  */
 
+@Slf4j
 @Service
 public class HallServiceImpl implements HallService {
 
@@ -38,6 +42,9 @@ public class HallServiceImpl implements HallService {
 
     @Resource
     private FilmFilmTMapper filmTMapper;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
 
     @Override
@@ -78,24 +85,55 @@ public class HallServiceImpl implements HallService {
     }
 
     //插入数据到hallFilmInfo
-    private FilmHallFilmInfoT describeFilmInfo(String filmId) throws CommonServiceException {
+    public FilmHallFilmInfoT describeFilmInfo(String filmId) throws CommonServiceException {
 
-        //解析返回值
-        FilmRespVO filmResult = filmTMapper.selectFilmById(filmId);
-        if (filmResult == null || ToolUtils.strIsNull(filmResult.getFilmId())){
-            throw new CommonServiceException(404,"抱歉，未找到相应的影片信息，filmId："+filmId);
+        String key = "filmId_"+filmId;
+        ValueOperations<String,FilmRespVO> operations = redisTemplate.opsForValue();
+        boolean haskey = redisTemplate.hasKey(key);
+
+        if (haskey){
+            log.info("从缓存获取数据");
+            log.info("****************");
+            FilmRespVO filmRespVO = operations.get(key);
+            if (filmRespVO == null || ToolUtils.strIsNull(filmRespVO.getFilmId())){
+                throw new CommonServiceException(404,"抱歉，未找到相应的影片信息，filmId："+filmId);
+            }
+
+            // 组织参数
+            FilmHallFilmInfoT hallFilmInfo = new FilmHallFilmInfoT();
+
+            hallFilmInfo.setFilmId(ToolUtils.str2Int(filmRespVO.getFilmId()));
+            hallFilmInfo.setFilmName(filmRespVO.getFilmName());
+            hallFilmInfo.setFilmLength(filmRespVO.getFilmLength());
+            hallFilmInfo.setFilmCats(filmRespVO.getFilmCats());
+            hallFilmInfo.setActors(filmRespVO.getActors());
+            hallFilmInfo.setImgAddress(filmRespVO.getImgAddress());
+
+            return hallFilmInfo;
+        }else {
+            log.info("从数据库获取数据");
+            log.info("****************");
+            //解析返回值
+            FilmRespVO filmResult = filmTMapper.selectFilmById(filmId);
+
+            if (filmResult == null || ToolUtils.strIsNull(filmResult.getFilmId())){
+                throw new CommonServiceException(404,"抱歉，未找到相应的影片信息，filmId："+filmId);
+            }
+
+            // 组织参数
+            FilmHallFilmInfoT hallFilmInfo = new FilmHallFilmInfoT();
+
+            hallFilmInfo.setFilmId(ToolUtils.str2Int(filmResult.getFilmId()));
+            hallFilmInfo.setFilmName(filmResult.getFilmName());
+            hallFilmInfo.setFilmLength(filmResult.getFilmLength());
+            hallFilmInfo.setFilmCats(filmResult.getFilmCats());
+            hallFilmInfo.setActors(filmResult.getActors());
+            hallFilmInfo.setImgAddress(filmResult.getImgAddress());
+
+            operations.set(key,filmResult,5,TimeUnit.HOURS);
+
+            return hallFilmInfo;
         }
 
-        // 组织参数
-        FilmHallFilmInfoT hallFilmInfo = new FilmHallFilmInfoT();
-
-        hallFilmInfo.setFilmId(ToolUtils.str2Int(filmResult.getFilmId()));
-        hallFilmInfo.setFilmName(filmResult.getFilmName());
-        hallFilmInfo.setFilmLength(filmResult.getFilmLength());
-        hallFilmInfo.setFilmCats(filmResult.getFilmCats());
-        hallFilmInfo.setActors(filmResult.getActors());
-        hallFilmInfo.setImgAddress(filmResult.getImgAddress());
-
-        return hallFilmInfo;
     }
 }

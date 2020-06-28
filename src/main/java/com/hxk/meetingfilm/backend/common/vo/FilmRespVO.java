@@ -2,6 +2,8 @@ package com.hxk.meetingfilm.backend.common.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author xiaokang.huang
  * @date 2020/6/8 16:12
@@ -9,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class FilmRespVO {
+public class FilmRespVO implements Serializable {
 
     private String filmId;
     private String filmName;
