@@ -87,7 +87,6 @@ public class HallServiceImpl implements HallService {
         }
 
         // 组织参数
-        // TODO 这里会报空指针，主要是filmId不存在
         FilmHallFilmInfoT hallFilmInfo = new FilmHallFilmInfoT();
 
         hallFilmInfo.setFilmId(ToolUtils.str2Int(filmResult.getFilmId()));
