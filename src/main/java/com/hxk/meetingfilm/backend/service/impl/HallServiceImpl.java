@@ -75,7 +75,7 @@ public class HallServiceImpl implements HallService {
         field.setHallId(ToolUtils.str2Int(reqVO.getHallTypeId()));
         field.setHallName(reqVO.getHallName());
         field.setPrice(ToolUtils.str2Int(reqVO.getFilmPrice()));
-
+        //插入数据到影厅表
         fieldTMapper.insert(field);
 
         // 播放厅对应的影片数据， 影片冗余数据， 缓存里应该有一份
@@ -129,11 +129,10 @@ public class HallServiceImpl implements HallService {
             hallFilmInfo.setFilmCats(filmResult.getFilmCats());
             hallFilmInfo.setActors(filmResult.getActors());
             hallFilmInfo.setImgAddress(filmResult.getImgAddress());
-
+            //添加缓存
             operations.set(key,filmResult,5,TimeUnit.HOURS);
 
             return hallFilmInfo;
         }
-
     }
 }
