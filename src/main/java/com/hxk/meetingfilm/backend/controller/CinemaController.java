@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Maps;
 import com.hxk.meetingfilm.backend.common.vo.AllCinemaRespVO;
 import com.hxk.meetingfilm.backend.common.vo.CinemaSaveReqVO;
+import com.hxk.meetingfilm.backend.dao.entity.FilmCinemaT;
 import com.hxk.meetingfilm.backend.service.CinemaService;
 import com.hxk.meetingfilm.backend.utils.common.vo.BasePageVO;
 import com.hxk.meetingfilm.backend.utils.common.vo.BaseResponseVO;
@@ -43,6 +44,18 @@ public class CinemaController {
     }
 
     /**
+     * 根据id查询影院信息
+     * @param cinemaId
+     * @return
+     * @throws CommonServiceException
+     */
+    @GetMapping("/{cinemaId}")
+    public BaseResponseVO getCinemaById(@PathVariable String cinemaId) throws CommonServiceException{
+        FilmCinemaT cinema = cinemaService.selectCinemaById(cinemaId);
+        return BaseResponseVO.success(cinema);
+    }
+
+    /**
      * 添加影院
      * @param reqVO
      * @return
@@ -53,6 +66,30 @@ public class CinemaController {
         reqVO.checkparam();
 
         cinemaService.createCinema(reqVO);
+        return BaseResponseVO.success();
+    }
+
+    /**
+     * 修改影院信息
+     * @param cinema
+     * @return
+     * @throws CommonServiceException
+     */
+    @PutMapping
+    public BaseResponseVO updateCinema(@RequestBody FilmCinemaT cinema) throws CommonServiceException{
+        cinemaService.updateCinema(cinema);
+        return BaseResponseVO.success();
+    }
+
+    /**
+     * 根据id删除影院
+     * @param cinemaId
+     * @return
+     * @throws CommonServiceException
+     */
+    @DeleteMapping("/{cinemaId}")
+    public BaseResponseVO deleteCinemaById(@PathVariable String cinemaId) throws CommonServiceException{
+        cinemaService.deleteCinema(cinemaId);
         return BaseResponseVO.success();
     }
 
@@ -73,4 +110,5 @@ public class CinemaController {
         result.put(title,page.getRecords());
         return result;
     }
+
 }

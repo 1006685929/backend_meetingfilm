@@ -11,10 +11,7 @@ import com.hxk.meetingfilm.backend.service.UserService;
 import com.hxk.meetingfilm.backend.utils.common.vo.BaseResponseVO;
 import com.hxk.meetingfilm.backend.utils.exception.CommonServiceException;
 import com.hxk.meetingfilm.backend.utils.util.JwtTokenUtil;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -57,5 +54,25 @@ public class UserController {
         result.put("token", token);
 
         return BaseResponseVO.success(result);
+    }
+
+    /**
+     * 退出登陆
+     * @return
+     */
+    @PostMapping("/logout")
+    public BaseResponseVO logout(){
+        /*
+            应用：
+                1、前端存储JWT 【七天】 ： JWT的刷新
+                2、服务器端会存储活动用户信息【30分钟】
+                3、JWT里的userId为key，查找活跃用户
+            退出：
+                1、前端删除掉JWT
+                2、后端服务器删除活跃用户缓存
+            现状：
+                1、前端删除掉JWT
+         */
+        return BaseResponseVO.success("用户退出成功");
     }
 }

@@ -65,6 +65,21 @@ public class CinemaServiceImpl implements CinemaService {
         return respVOIPage;
     }
 
+    @Override
+    public FilmCinemaT selectCinemaById(String cinemaId) throws CommonServiceException {
+        return cinemaTMapper.selectById(cinemaId);
+    }
+
+    @Override
+    public void updateCinema(FilmCinemaT cinemaT) throws CommonServiceException {
+        cinemaTMapper.updateById(cinemaT);
+    }
+
+    @Override
+    public void deleteCinema(String cinemaId) {
+        cinemaTMapper.deleteById(cinemaId);
+    }
+
     /**
      * 对象组装
      * @param cinema
