@@ -1,24 +1,27 @@
-package com.hxk.meetingfilm.backend;
+package com.hxk.meetingfilm.backend.utils.util;
+
 
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import io.minio.errors.MinioException;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-@SpringBootTest
-public class BackendMeetingfilmApplicationTests {
+/**
+ * @author xiaokang.huang
+ * @date 2020/7/2 11:15
+ * @description minIo工具类
+ */
+
+public class MinIoUtils {
 
 
-    @Test
-    public void upload()throws NoSuchAlgorithmException, IOException, InvalidKeyException {
+    public String upload()throws NoSuchAlgorithmException, IOException, InvalidKeyException {
 
         try {
             MinioClient minioClient = MinioClient.builder().endpoint("http://47.95.2.90:9000").credentials("admin","123123123").build();
@@ -36,8 +39,11 @@ public class BackendMeetingfilmApplicationTests {
             System.out.println("C:\\Users\\HXK\\Pictures\\Saved Pictures\\bbb.jpg is successfully uploaded as bbb.jpg to `test` bucket.");
             String url = minioClient.getObjectUrl("test", "bbb.jpg");
             System.out.println(url);
+            return url;
         } catch (MinioException e) {
             System.out.println("Error occurred: " + e);
+            return "上传成功";
         }
     }
+
 }

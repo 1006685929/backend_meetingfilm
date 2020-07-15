@@ -29,6 +29,17 @@ spring:
         max-wait: 1
     timeout: 3000
 
+# 图片服务器 minio配置
+min:
+  io:
+    endpoint: "http://47.95.2.90:9000"
+    accessKey: admin
+    secretKey: 123123123
+    bucket-name: test
+
+
+
+
 logging:
   config: classpath:logback.xml
 
